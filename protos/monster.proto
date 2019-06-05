@@ -1,0 +1,40 @@
+syntax = "proto3";
+package dadguide;
+
+//import "google/protobuf/timestamp.proto";
+
+message CrossServerInt {
+  int32 jp = 1;
+  int32 na = 2;
+  int32 kr = 3;
+}
+
+message CrossServerString {
+  string jp = 1;
+  string na = 2;
+  string kr = 3;
+}
+
+enum MonsterType {
+  UNKNOWN_MONSTER_TYPE = 0;
+  GOD = 1;
+  WORK = 2;
+}
+
+enum Awakening {
+  UNKNOWN_AWAKENING = 0;
+  HP_BOOST = 1;
+}
+
+message Monster {
+  int32 unique_id = 1;
+  CrossServerInt monster_id = 2;
+  CrossServerString name = 3;
+
+  MonsterType type_1 = 4;
+  MonsterType type_2 = 5;
+  MonsterType type_3 = 6;
+
+  repeated Awakening awakenings = 7;
+  repeated Awakening super_awakenings = 8;
+}
