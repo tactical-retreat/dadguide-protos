@@ -26,15 +26,30 @@ enum Awakening {
   HP_BOOST = 1;
 }
 
+message Curve {
+  int32 max = 1;
+  int32 min = 2;
+  float scale = 3;
+}
+
 message Monster {
-  int32 unique_id = 1;
+  int32 monster_no = 1;
   CrossServerInt monster_id = 2;
   CrossServerString name = 3;
 
-  MonsterType type_1 = 4;
-  MonsterType type_2 = 5;
-  MonsterType type_3 = 6;
+  Curve hp = 4;
+  Curve atk = 5;
+  Curve rcv = 6;
 
-  repeated Awakening awakenings = 7;
-  repeated Awakening super_awakenings = 8;
+  int32 cost = 7;
+  int32 exp = 8;
+  int32 level = 9;
+  int32 rarity = 10;
+
+  MonsterType type_1 = 11;
+  MonsterType type_2 = 12;
+  MonsterType type_3 = 13;
+
+//  repeated Awakening awakenings = 7;
+//  repeated Awakening super_awakenings = 8;
 }
