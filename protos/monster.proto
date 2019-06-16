@@ -15,8 +15,37 @@ message CrossServerString {
   string kr = 3;
 }
 
+
+message CrossServerBool {
+  bool jp = 1;
+  bool na = 2;
+  bool kr = 3;
+}
+
+message Stat {
+  int32 min = 1;
+  int32 max = 2;
+}
+
+message LeaderSkill {
+  int32 pad_id = 1;
+  CrossServerString name = 2;
+  CrossServerString text = 3;
+  float hp_mult = 4;
+  float atk_mult = 5;
+  float rcv_mult = 6;
+}
+
+message ActiveSkill {
+  int32 pad_id = 1;
+  CrossServerString name = 2;
+  CrossServerString text = 3;
+  int32 max_cd = 4;
+  int32 min_cd = 5;
+}
+
 enum MonsterType {
-  UNKNOWN_MONSTER_TYPE = 0;
+  UNSET_TYPE = 0;
   GOD = 1;
   WORK = 2;
 }
@@ -26,30 +55,54 @@ enum Awakening {
   HP_BOOST = 1;
 }
 
-message Curve {
-  int32 max = 1;
-  int32 min = 2;
-  float scale = 3;
-}
-
 message Monster {
-  int32 monster_no = 1;
+  // Some monsters have different monster_ids between servers.
+  // This value is a globally unique ID; mainly it follows the JP namespace,
+  // except for monsters only in NA, which are offset by 10K.
+  int32 unique_id = 1;
+
+  // Per-server ID values.
+  // If a monster is not on JP, takes the NA value.
+  // If a monster is not on any other server, takes the JP value.
   CrossServerInt monster_id = 2;
+
+  // Per-server names.
+  // If there is a value present in the monster overrides, it should be
+  // preferred to this value.
+  // If a monster is not on JP, takes the NA value.
+  // If a monster is not on any other server, takes the JP value.
   CrossServerString name = 3;
 
-  Curve hp = 4;
-  Curve atk = 5;
-  Curve rcv = 6;
+  // Per-server marker for if the monster is live.
+  CrossServerBool live = 4;
 
-  int32 cost = 7;
-  int32 exp = 8;
-  int32 level = 9;
-  int32 rarity = 10;
+  // Stats and skill info for the JP server.
+  MonsterInfo jp_info = 5;
 
-  MonsterType type_1 = 11;
-  MonsterType type_2 = 12;
-  MonsterType type_3 = 13;
+  // Stats and skill info for the NA server.
+  // Only populated if different from jp_info.
+  MonsterInfo na_info = 6;
+}
 
-//  repeated Awakening awakenings = 7;
-//  repeated Awakening super_awakenings = 8;
+// Data which can be different from server to server.
+message MonsterInfo {
+  MonsterType type_1 = 1;
+  MonsterType type_2 = 2;
+  MonsterType type_3 = 3;
+
+  Stat hp = 4;
+  Stat atk = 5;
+  Stat rcv = 6;
+
+  repeated Awakening awakenings = 7;
+  repeated Awakening super_awakenings = 8;
+}
+
+// Things that can be overridden by administrators and should be overlaid onto
+// monster info to compute the final data.
+message MonsterOverrides {
+    CrossServerString name = 1;
+    CrossServerString leader_skill_text = 2;
+    CrossServerString active_skill_text = 3;
+
 }
