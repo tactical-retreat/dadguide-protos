@@ -1,0 +1,33 @@
+syntax = "proto3";
+package dadguide;
+
+// Need to think about this more.
+// Create an enemy table? Or bundle the enemy info into this field
+message Enemy {
+    repeated LevelDetails levels = 1;
+}
+
+message EnemyDetails {
+}
+
+message LevelDetails {
+    // The level (min 1) inclusive to use these behaviors.
+    int32 level = 1;
+    repeated BehaviorRef behaviors = 2;
+}
+
+message BehaviorRef {
+    // If 0, the BehaviorDetails should fill the entire info.
+    int32 behavior_id = 1;
+
+    // If any field is populated it should override the loaded behavior.
+    BehaviorDetails overrides = 2;
+}
+
+message BehaviorSup {
+    BehaviorDetails = 1;
+}
+
+message BehaviorDetails {
+
+}
